@@ -6,16 +6,21 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Contact from "./Contact.tsx";
 import Layout from "./Layout.tsx";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+    },
+    {
+      path: "/contact",
+      element: <Contact />,
+    },
+  ],
   {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/contact",
-    element: <Contact />,
-  },
-]);
+    basename: "/router_test",
+  }
+);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
