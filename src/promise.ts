@@ -50,17 +50,24 @@ class PromiseWrapper<T> {
 }
 
 async function fetchTestData(rejected: boolean = false): Promise<string> {
-  // テストのため3秒遅延
-  const text = await new Promise<string>((resolve, reject) =>
-    setTimeout(() => {
-      if (rejected) {
-        reject("失敗です。");
-      } else {
-        resolve("成功です。");
-      }
-    }, 3000)
-  ).catch((err: string) => err);
-  return text;
+  try {
+    const text = await new Promise<string>((resolve, reject) =>
+      setTimeout(() => {
+        if (rejected) {
+          reject("失敗です。");
+        } else {
+          resolve("成功です。");
+        }
+      }, 1500)
+    );
+    return text;
+  } catch (err) {
+    if (typeof err === "string") {
+      return err;
+    } else {
+      throw err;
+    }
+  }
 }
 
 let executingPromise: PromiseWrapper<string> | undefined;

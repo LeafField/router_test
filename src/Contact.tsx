@@ -1,24 +1,36 @@
-import { FC, useLayoutEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { FC, useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { fetchData } from "./promise";
+import { ErrorContextCallback } from "./Layout";
 
-const Contact: FC = () => {
+const Contact: FC = (): JSX.Element | undefined => {
+  const [view, setView] = useState(false);
   const navigate = useNavigate();
-  const data = fetchData(true);
+  const [searchParams] = useSearchParams();
+  const rejected = searchParams.get("rejected");
+  const data = fetchData(Boolean(rejected));
   const res = data.get();
+  const setError = useContext(ErrorContextCallback);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (res === "失敗です。") {
+      setView(false);
+      setError(res);
       navigate("..");
+    } else {
+      setError(undefined);
+      setView(true);
     }
-  }, [data]);
+  }, [data, setView, rejected]);
 
-  return (
-    <div>
-      <p>{res}</p>
-      <Link to={".."}>go back</Link>
-    </div>
-  );
+  if (view) {
+    return (
+      <div>
+        <p>{res}</p>
+        <Link to={".."}>go back</Link>
+      </div>
+    );
+  }
 };
 
 export default Contact;
