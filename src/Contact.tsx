@@ -21,7 +21,7 @@ const Contact: FC = (): JSX.Element | undefined => {
       setError(undefined);
       setView(true);
     }
-  }, [data, setView, rejected]);
+  }, [res, setError, navigate]);
 
   if (view) {
     return (
