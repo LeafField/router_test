@@ -1,28 +1,32 @@
 import { lazy } from "react";
 import App from "./App.tsx";
 import ErrorElement from "./ErrorElement.tsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
 const ContactLazy = lazy(() => import("./Contact.tsx"));
 
 const router = createBrowserRouter(
   [
     {
-      path: "/",
-      element: <App />,
-    },
-    {
-      path: "/contact",
-      element: <ContactLazy />,
+      element: <Outlet />,
       errorElement: <ErrorElement />,
-    },
-    {
-      path: "/loader",
-      element: <ContactLazy />,
-      errorElement: <ErrorElement />,
-      loader: () => {
-        throw new Error("ローダーエラーです。");
-      },
+      children: [
+        {
+          path: "/",
+          element: <App />,
+        },
+        {
+          path: "/contact",
+          element: <ContactLazy />,
+        },
+        {
+          path: "/loader",
+          element: <ContactLazy />,
+          loader: () => {
+            throw new Error("ローダーエラーです。");
+          },
+        },
+      ],
     },
   ],
   {

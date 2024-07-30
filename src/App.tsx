@@ -44,6 +44,7 @@ function App() {
       <div className="contact-wrapper">
         <Link to={"/contact?rejected=true"}>異常系:ルート内非同期処理</Link>
         <Link to={"/loader"}>異常系:ローダーエラー</Link>
+        <Link to={"/component"}>異常系:コンポーネント取得エラー</Link>
         <Link to={"/contact"}>正常系</Link>
       </div>
       <p className="read-the-docs">
