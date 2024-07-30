@@ -1,11 +1,9 @@
-import { FC, useContext, useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { FC, useContext, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { fetchData } from "./promise";
 import { ErrorContextCallback } from "./Layout";
 
 const Contact: FC = (): JSX.Element | undefined => {
-  const [view, setView] = useState(false);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const rejected = searchParams.get("rejected");
   const data = fetchData(Boolean(rejected));
@@ -13,24 +11,17 @@ const Contact: FC = (): JSX.Element | undefined => {
   const setError = useContext(ErrorContextCallback);
 
   useEffect(() => {
-    if (res === "失敗です。") {
-      setView(false);
-      setError(res);
-      navigate("..");
-    } else {
-      setError(undefined);
-      setView(true);
-    }
-  }, [res, setError, navigate]);
+    setError(undefined);
+  }, [setError]);
 
-  if (view) {
+  if (res) {
     return (
       <div>
         <p>{res}</p>
         <Link to={".."}>go back</Link>
       </div>
     );
-  }
+  } else throw Error("コンポーネント内非同期処理のエラーです。");
 };
 
 export default Contact;

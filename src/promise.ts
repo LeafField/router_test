@@ -9,7 +9,7 @@ export type State<T> =
     }
   | {
       type: "rejected";
-      error: T;
+      error: undefined;
     };
 
 class PromiseWrapper<T> {
@@ -29,7 +29,7 @@ class PromiseWrapper<T> {
           type: "rejected",
           error: err,
         };
-        throw err;
+        throw new Error(err);
       });
     this.state = {
       type: "pending",
@@ -44,12 +44,12 @@ class PromiseWrapper<T> {
       case "fulfilled":
         return this.state.result;
       case "rejected":
-        throw this.state.error;
+        throw new Error(this.state.error);
     }
   }
 }
 
-async function fetchTestData(rejected: boolean = false): Promise<string> {
+async function fetchTestData(rejected: boolean = false) {
   try {
     const text = await new Promise<string>((resolve, reject) =>
       setTimeout(() => {
@@ -62,17 +62,15 @@ async function fetchTestData(rejected: boolean = false): Promise<string> {
     );
     return text;
   } catch (err) {
-    if (typeof err === "string") {
-      return err;
-    } else {
-      throw err;
-    }
+    if (err instanceof Error) throw new Error(err.message);
   }
 }
 
-let executingPromise: PromiseWrapper<string> | undefined;
+let executingPromise: PromiseWrapper<string | undefined> | undefined;
 
-export function fetchData(rejected: boolean = false): PromiseWrapper<string> {
+export function fetchData(
+  rejected: boolean = false
+): PromiseWrapper<string | undefined> {
   if (!executingPromise) {
     executingPromise = new PromiseWrapper(fetchTestData(rejected));
   }
